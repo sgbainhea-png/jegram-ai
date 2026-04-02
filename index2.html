@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JEGRAM AI — DayFlow</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #F0F4F8;
+      --surface: #FFFFFF;
+      --card: #FFFFFF;
+      --border: #D6E4F0;
+      --blue: #1A6FC4;
+      --blue-light: #3B8FE4;
+      --blue-dim: #1A6FC420;
+      --blue-pale: #EBF3FC;
+      --gray: #64748B;
+      --gray-light: #94A3B8;
+      --gray-pale: #F1F5F9;
+      --text: #1E2A3B;
+      --white: #FFFFFF;
+      --success: #22C55E;
+      --danger: #EF4444;
+      --shadow: 0 2px 16px rgba(26,111,196,0.08);
+      --shadow-md: 0 4px 24px rgba(26,111,196,0.12);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Sora', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* HEADER */
+    header {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow);
+    }
+
+    .header-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      height: 60px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--blue), var(--blue-light));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 800;
+      font-size: 16px;
+      box-shadow: 0 4px 12px var(--blue-dim);
+    }
+
+    .logo-text {
+      font-family: 'Crimson Pro', serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--blue);
+      letter-spacing: 1px;
+    }
+
+    .logo-sub {
+      font-size: 9px;
+      color: var(--gray-light);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    nav {
+      display: flex;
+      gap: 4px;
+      flex: 1;
+      justify-content: center;
+    }
+
+    .nav-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      padding: 6px 14px;
+      cursor: pointer;
+      font-family: 'Sora', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--gray);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .nav-btn.active {
+      background: var(--blue-pale);
+      border-color: var(--blue-light);
+      color: var(--blue);
+      font-weight: 600;
+    }
+
+    .date-badge {
+      font-size: 11px;
+      color: var(--gray-light);
+      flex-shrink: 0;
+    }
+
+    /* MAIN */
+    main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 32px 24px;
+    }
+
+    .module { display: none; animation: fadeUp 0.3s ease; }
+    .module.active { display: block; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* PAGE TITLE */
+    .page-title { font-family: 'Crimson Pro', serif; font-size: 32px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .page-sub { font-size: 13px; color: var(--gray); margin-bottom: 28px; }
+
+    /* CARD */
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      margin-bottom: 16px;
+    }
+
+    .card-label {
+      font-size: 11px;
+      color: var(--gray-light);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    /* PROGRESS BAR */
+    .progress-bar {
+      height: 6px;
+      background: var(--border);
+      border-radius: 4px;
+      margin-bottom: 28px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--blue), var(--blue-light));
+      border-radius: 4px;
+      transition: width 0.4s ease;
+    }
+
+    /* INPUTS */
+    input[type="text"], input[type="number"], input[type="date"], input[type="time"], textarea {
+      font-family: 'Sora', sans-serif;
+      font-size: 14px;
+      color: var(--text);
+      background: var(--gray-pale);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      outline: none;
+      transition: border-color 0.2s;
+      width: 100%;
+    }
+
+    input:focus, textarea:focus { border-color: var(--blue-light); background: var(--white); }
+    input::placeholder, textarea::placeholder { color: var(--gray-light); }
+
+    /* BUTTONS */
+    .btn-primary {
+      background: linear-gradient(135deg, var(--blue), var(--blue-light));
+      border: none;
+      border-radius: 10px;
+      padding: 10px 20px;
+      color: white;
+      font-family: 'Sora', sans-serif;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .btn-primary:hover { opacity: 0.9; }
+
+    .btn-ai {
+      background: var(--blue-pale);
+      border: 1px solid var(--blue-light);
+      border-radius: 10px;
+      padding: 10px 20px;
+      color: var(--blue);
+      font-family: 'Sora', sans-serif;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-ai:hover { background: var(--blue-dim); }
+    .btn-ai:disabled { opacity: 0.5; cursor: default; }
+
+    /* TASK ITEM */
+    .task-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .task-item:last-child { border-bottom: none; }
+
+    .checkbox {
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 2px solid var(--border);
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+
+    .checkbox.checked {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: white;
+    }
+
+    .task-text { flex: 1; font-size: 14px; }
+    .task-text.done { text-decoration: line-through; color: var(--gray-light); }
+
+    .prio-badge {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+
+    .prio-high { background: #FEE2E2; color: #EF4444; }
+    .prio-medium { background: #FEF3C7; color: #D97706; }
+    .prio-low { background: #DCFCE7; color: #16A34A; }
+
+    .delete-btn {
+      background: none;
+      border: none;
+      color: var(--gray-light);
+      cursor: pointer;
+      font-size: 18px;
+      line-height: 1;
+      padding: 0 4px;
+    }
+
+    /* STAT CARDS */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+
+    .stat-val { font-size: 22px; font-weight: 700; }
+    .stat-label { font-size: 11px; color: var(--gray); margin-top: 2px; }
+
+    /* WATER DOTS */
+    .water-dots {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .water-dot {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 2px solid var(--border);
+      background: var(--gray-pale);
+    }
+
+    .water-dot.filled {
+      background: linear-gradient(135deg, #3B82F6, #60A5FA);
+      border-color: #3B82F6;
+    }
+
+    /* MOOD BUTTONS */
+    .mood-row {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .mood-btn {
+      font-size: 28px;
+      background: none;
+      border: 2px solid transparent;
+      border-radius: 12px;
+      padding: 6px 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+      filter: grayscale(50%);
+    }
+
+    .mood-btn.selected {
+      border-color: var(--blue);
+      filter: none;
+      transform: scale(1.2);
+      background: var(--blue-pale);
+    }
+
+    /* REMINDER ITEM */
+    .reminder-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 10px;
+      border-left: 3px solid var(--blue);
+      box-shadow: var(--shadow);
+    }
+
+    .reminder-item.overdue { border-left-color: var(--danger); }
+    .reminder-item.done-item { opacity: 0.4; }
+
+    /* AI RESPONSE */
+    .ai-response {
+      background: var(--blue-pale);
+      border: 1px solid var(--blue-light);
+      border-left: 3px solid var(--blue);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-top: 16px;
+    }
+
+    .ai-label {
+      font-size: 10px;
+      color: var(--blue);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .ai-text {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.7;
+      white-space: pre-wrap;
+    }
+
+    .blink {
+      display: inline-block;
+      animation: blink 1s infinite;
+      color: var(--blue);
+    }
+
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+    /* FORM ROW */
+    .form-row { display: flex; gap: 8px; margin-bottom: 16px; }
+    .form-row input { flex: 1; }
+
+    select {
+      font-family: 'Sora', sans-serif;
+      font-size: 13px;
+      color: var(--text);
+      background: var(--gray-pale);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 24px;
+      border-top: 1px solid var(--border);
+      color: var(--gray-light);
+      font-size: 12px;
+      margin-top: 40px;
+    }
+
+    footer span { color: var(--blue); font-family: 'Crimson Pro', serif; font-weight: 600; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-icon">J</div>
+      <div>
+        <div class="logo-text">JEGRAM AI</div>
+        <div class="logo-sub">DayFlow — Your Life. Automated.</div>
+      </div>
+    </div>
+    <nav>
+      <button class="nav-btn active" onclick="switchTab('planner')">📋 Planner</button>
+      <button class="nav-btn" onclick="switchTab('budget')">💰 Budget</button>
+      <button class="nav-btn" onclick="switchTab('health')">💪 Health</button>
+      <button class="nav-btn" onclick="switchTab('reminders')">🔔 Reminders</button>
+    </nav>
+    <div class="date-badge" id="dateBadge"></div>
+  </div>
+</header>
+
+<main>
+
+  <!-- DAILY PLANNER -->
+  <div class="module active" id="planner">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+      <div>
+        <div class="page-title">Daily Planner</div>
+        <div class="page-sub" id="plannerSub">0 of 0 tasks complete</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:32px;font-weight:700;color:var(--blue)" id="plannerPct">0%</div>
+        <div style="font-size:11px;color:var(--gray)">today's progress</div>
+      </div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="plannerBar" style="width:0%"></div></div>
+
+    <div class="form-row">
+      <input type="text" id="taskInput" placeholder="Add a new task..." onkeydown="if(event.key==='Enter')addTask()" />
+      <select id="taskPriority">
+        <option value="high">High</option>
+        <option value="medium" selected>Medium</option>
+        <option value="low">Low</option>
+      </select>
+      <button class="btn-primary" onclick="addTask()">Add</button>
+    </div>
+
+    <div class="card" id="taskList" style="padding:4px 20px;">
+      <div style="color:var(--gray-light);font-size:13px;padding:16px 0;text-align:center;">No tasks yet. Add one above!</div>
+    </div>
+
+    <button class="btn-ai" onclick="getPlanAdvice()" id="planBtn">✦ Get AI Planning Advice</button>
+    <div id="planAI" style="display:none;" class="ai-response">
+      <div class="ai-label">✦ JEGRAM AI — DayFlow</div>
+      <div class="ai-text" id="planAIText"></div>
+    </div>
+  </div>
+
+  <!-- BUDGET COACH -->
+  <div class="module" id="budget">
+    <div class="page-title">Budget Coach</div>
+    <div class="page-sub">Track your income and expenses with AI guidance.</div>
+
+    <div class="card">
+      <div class="card-label">Monthly Income (USD)</div>
+      <input type="number" id="incomeInput" placeholder="0.00" oninput="updateBudget()" style="font-size:28px;font-weight:700;color:var(--success);border:none;background:transparent;padding:0;" />
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-val" id="incomeVal" style="color:var(--success)">$0</div>
+        <div class="stat-label">Income</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" id="spentVal" style="color:var(--danger)">$0</div>
+        <div class="stat-label">Spent</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" id="remainVal" style="color:var(--blue)">$0</div>
+        <div class="stat-label">Remaining</div>
+      </div>
+    </div>
+
+    <div class="card" id="expenseList" style="padding:4px 20px;">
+      <div style="color:var(--gray-light);font-size:13px;padding:16px 0;text-align:center;">No expenses yet.</div>
+    </div>
+
+    <div class="form-row">
+      <input type="text" id="expLabel" placeholder="Expense name" />
+      <input type="number" id="expAmount" placeholder="Amount" style="max-width:120px;" />
+      <button class="btn-primary" onclick="addExpense()">Add</button>
+    </div>
+
+    <button class="btn-ai" onclick="getBudgetAdvice()" id="budgetBtn">✦ Get Budget Advice</button>
+    <div id="budgetAI" style="display:none;" class="ai-response">
+      <div class="ai-label">✦ JEGRAM AI — DayFlow</div>
+      <div class="ai-text" id="budgetAIText"></div>
+    </div>
+  </div>
+
+  <!-- HEALTH & WELLNESS -->
+  <div class="module" id="health">
+    <div class="page-title">Health & Wellness</div>
+    <div class="page-sub">Track your daily wellness. Let AI guide your habits.</div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+      <div class="card">
+        <div class="card-label">💧 Water Intake</div>
+        <div class="water-dots" id="waterDots"></div>
+        <div style="font-size:13px;color:var(--gray)" id="waterLabel">0 / 8 glasses</div>
+      </div>
+      <div class="card">
+        <div class="card-label">🌙 Sleep Hours</div>
+        <input type="number" id="sleepInput" min="0" max="24" placeholder="e.g. 7" style="font-size:24px;font-weight:700;color:var(--blue);border:none;background:transparent;padding:0;width:100%;" />
+        <div style="font-size:12px;color:var(--gray-light);margin-top:6px;">Recommended: 8–9 hrs</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">😊 Today's Mood</div>
+      <div class="mood-row" id="moodRow"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">🏃 Exercise Today</div>
+      <input type="text" id="exerciseInput" placeholder="e.g. 30 min walk, 20 push-ups..." />
+    </div>
+
+    <button class="btn-ai" onclick="getHealthAdvice()" id="healthBtn" style="margin-top:4px;">✦ Get Wellness Advice</button>
+    <div id="healthAI" style="display:none;" class="ai-response">
+      <div class="ai-label">✦ JEGRAM AI — DayFlow</div>
+      <div class="ai-text" id="healthAIText"></div>
+    </div>
+  </div>
+
+  <!-- SMART REMINDERS -->
+  <div class="module" id="reminders">
+    <div class="page-title">Smart Reminders</div>
+    <div class="page-sub">Never miss what matters. AI helps you stay on track.</div>
+
+    <div class="card">
+      <div class="card-label">New Reminder</div>
+      <input type="text" id="reminderText" placeholder="What do you need to remember?" style="margin-bottom:10px;" />
+      <div class="form-row" style="margin-bottom:0;">
+        <input type="date" id="reminderDate" />
+        <input type="time" id="reminderTime" />
+        <button class="btn-primary" onclick="addReminder()">Set</button>
+      </div>
+    </div>
+
+    <div id="reminderList"></div>
+
+    <button class="btn-ai" onclick="getScheduleAdvice()" id="remBtn">✦ Get Smart Schedule Advice</button>
+    <div id="remAI" style="display:none;" class="ai-response">
+      <div class="ai-label">✦ JEGRAM AI — DayFlow</div>
+      <div class="ai-text" id="remAIText"></div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <span>JEGRAM AI</span> · DayFlow · Your Life. Automated. · © 2026
+</footer>
+
+<script>
+  // DATE
+  document.getElementById('dateBadge').textContent = new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+
+  // TAB SWITCHING
+  function switchTab(tab) {
+    document.querySelectorAll('.module').forEach(m => m.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tab).classList.add('active');
+    event.currentTarget.classList.add('active');
+  }
+
+  // ── PLANNER ──────────────────────────────────────────
+  let tasks = [];
+
+  function addTask() {
+    const text = document.getElementById('taskInput').value.trim();
+    if (!text) return;
+    const priority = document.getElementById('taskPriority').value;
+    tasks.push({ id: Date.now(), text, priority, done: false });
+    document.getElementById('taskInput').value = '';
+    renderTasks();
+  }
+
+  function toggleTask(id) {
+    tasks = tasks.map(t => t.id === id ? { ...t, done: !t.done } : t);
+    renderTasks();
+  }
+
+  function deleteTask(id) {
+    tasks = tasks.filter(t => t.id !== id);
+    renderTasks();
+  }
+
+  function renderTasks() {
+    const list = document.getElementById('taskList');
+    const done = tasks.filter(t => t.done).length;
+    const pct = tasks.length ? Math.round((done / tasks.length) * 100) : 0;
+    document.getElementById('plannerPct').textContent = pct + '%';
+    document.getElementById('plannerSub').textContent = done + ' of ' + tasks.length + ' tasks complete';
+    document.getElementById('plannerBar').style.width = pct + '%';
+
+    if (!tasks.length) {
+      list.innerHTML = '<div style="color:var(--gray-light);font-size:13px;padding:16px 0;text-align:center;">No tasks yet. Add one above!</div>';
+      return;
+    }
+
+    list.innerHTML = tasks.map(t => `
+      <div class="task-item" style="${t.done ? 'opacity:0.5;' : ''}">
+        <div class="checkbox ${t.done ? 'checked' : ''}" onclick="toggleTask(${t.id})">${t.done ? '✓' : ''}</div>
+        <div class="task-text ${t.done ? 'done' : ''}">${t.text}</div>
+        <div class="prio-badge prio-${t.priority}">${t.priority}</div>
+        <button class="delete-btn" onclick="deleteTask(${t.id})">×</button>
+      </div>
+    `).join('');
+  }
+
+  async function getPlanAdvice() {
+    const btn = document.getElementById('planBtn');
+    const box = document.getElementById('planAI');
+    const txt = document.getElementById('planAIText');
+    const pending = tasks.filter(t => !t.done).map(t => `[${t.priority}] ${t.text}`).join(', ') || 'none';
+    btn.disabled = true; btn.textContent = 'Thinking...';
+    box.style.display = 'block'; txt.textContent = '';
+    await streamClaude('You are JEGRAM AI DayFlow planning assistant. Help users prioritize their day. Be concise and motivating. Max 3 sentences.', `My pending tasks: ${pending}. How should I tackle these?`, txt);
+    btn.disabled = false; btn.textContent = '✦ Get AI Planning Advice';
+  }
+
+  // ── BUDGET ───────────────────────────────────────────
+  let expenses = [];
+
+  fu
